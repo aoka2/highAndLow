@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カードを引いて合計値を計算するゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>カードゲーム!</h1>
+        <button id="draw-deck" onclick="drawCards()">山札を引く</button>
+
+        <div id="card-area">
+            <h2>引いたカード:</h2>
+            <div id="drawn-cards"></div>
+        </div>
+
+        <div id="selected-cards-area">
+            <h2>選択したカード:</h2>
+            <div id="selected-cards"></div>
+        </div>
+
+        <div id="totals-area">
+            <h2>スートごとの合計値:</h2>
+            <p>ハート: <span id="hearts-total">0</span></p>
+            <p>ダイヤ: <span id="diamonds-total">0</span></p>
+            <p>クラブ: <span id="clubs-total">0</span></p>
+            <p>スペード: <span id="spades-total">0</span></p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
