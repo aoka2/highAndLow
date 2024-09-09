@@ -35,6 +35,13 @@ button:hover {
     width: 80px;
     margin: 5px;
     cursor: pointer;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
+
+#drawn-cards img:hover, #selected-cards img:hover {
+    transform: scale(1.1);
 }
 
 h2 {
@@ -44,4 +51,16 @@ h2 {
 
 #totals-area {
     margin-top: 30px;
+}
+
+#remaining-cards {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}
+
+#hearts-total, #diamonds-total, #clubs-total, #spades-total {
+    font-size: 18px;
+    margin: 5px 0;
 }
