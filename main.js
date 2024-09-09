@@ -113,31 +113,6 @@ function getCardValue(value) {
     return parseInt(value);
 }
 
-// スートごとの合計値を更新
-function updateTotals(suit, value) {
-    const cardValue = getCardValue(value);
-
-    switch (suit) {
-        case 'HEARTS':
-            totalHearts += cardValue;
-            document.getElementById('hearts-total').textContent = totalHearts;
-            break;
-        case 'DIAMONDS':
-            totalDiamonds += cardValue;
-            document.getElementById('diamonds-total').textContent = totalDiamonds;
-            break;
-        case 'CLUBS':
-            totalClubs += cardValue;
-            document.getElementById('clubs-total').textContent = totalClubs;
-            break;
-        case 'SPADES':
-            totalSpades += cardValue;
-            document.getElementById('spades-total').textContent = totalSpades;
-            break;
-        default:
-            break;
-    }
-}
 
 // 残りのカード枚数を更新
 function updateRemainingCards() {
