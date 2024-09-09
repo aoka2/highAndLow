@@ -17,7 +17,7 @@ window.onload = () => {
 
 // 山札からカードを引く
 function drawCards() {
-    fetch(`${deckApiUrl}/${deckId}/draw/?count=5`)
+    fetch(`${deckApiUrl}/${deckId}/draw/?count=4`)
         .then(response => response.json())
         .then(data => {
             const drawnCardsDiv = document.getElementById('drawn-cards');
