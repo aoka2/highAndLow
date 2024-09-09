@@ -70,7 +70,7 @@ function drawCards() {
                 cardImg.alt = `${card.value} of ${card.suit}`;
                 cardImg.dataset.value = card.value;
                 cardImg.dataset.suit = card.suit;
-
+                console.log (cardImg)
                 cardImg.onclick = () => selectCard(cardImg);
 
                 drawnCardsDiv.appendChild(cardImg);
@@ -142,7 +142,7 @@ function updateTotals(suit, value) {
 // 残りのカード枚数を更新
 function updateRemainingCards() {
     const remainingCardsText = `あと${maxCardsToSelect - selectedCardsCount}枚選べます`;
-    const remainingCardsElement = document.getElementById('remaining-cards');
+    const remainingCardsElement = document.getElementById('selected-cards-area');
     
     if (remainingCardsElement) {
         remainingCardsElement.textContent = remainingCardsText;
