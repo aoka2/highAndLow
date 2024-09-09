@@ -10,12 +10,49 @@ const deckApiUrl = "https://deckofcardsapi.com/api/deck";
 
 // ゲーム開始時にデッキを取得
 window.onload = () => {
+    initializeGame();
+    loadDefaultImage();
+};
+
+// ゲームの初期化
+function initializeGame() {
     fetch(`${deckApiUrl}/new/shuffle/?deck_count=1`)
         .then(response => response.json())
         .then(data => {
             deckId = data.deck_id;
-        });
-};
+        })
+        .catch(error => console.error('デッキの取得中にエラーが発生しました:', error));
+}
+
+// 画像の読み込みと表示
+function loadDefaultImage() {
+    const imageUrl = "https://deckofcardsapi.com/static/img/back.png";
+
+    // 画像を取得
+    fetch(imageUrl)
+        .then(response => response.blob()) // 画像データをBlob形式で取得
+        .then(blob => {
+            // Blob URLを作成
+            const imageObjectURL = URL.createObjectURL(blob);
+
+            // <img>タグを作成
+            const img = document.createElement("img");
+
+            // imgタグのsrc属性にBlob URLを設定
+            img.src = imageObjectURL;
+
+            // class="image-container" を持つ要素を取得
+            const container = document.querySelector(".image-container");
+
+            // 取得した要素に画像を追加
+            if (container) {
+                container.appendChild(img);
+            } else {
+                console.error("画像を表示する要素が見つかりません。");
+            }
+        })
+        .catch(error => console.error('画像の取得中にエラーが発生しました:', error));
+}
 
 // 山札からカードを引く
 function drawCards() {
@@ -38,7 +75,8 @@ function drawCards() {
 
                 drawnCardsDiv.appendChild(cardImg);
             });
-        });
+        })
+        .catch(error => console.error('カードの取得中にエラーが発生しました:', error));
 }
 
 // カードを選択してリストに追加、場から削除
@@ -104,5 +142,11 @@ function updateTotals(suit, value) {
 // 残りのカード枚数を更新
 function updateRemainingCards() {
     const remainingCardsText = `あと${maxCardsToSelect - selectedCardsCount}枚選べます`;
-    document.getElementById('remaining-cards').textContent = remainingCardsText;
+    const remainingCardsElement = document.getElementById('remaining-cards');
+    
+    if (remainingCardsElement) {
+        remainingCardsElement.textContent = remainingCardsText;
+    } else {
+        console.error("要素 'remaining-cards' が見つかりません。");
+    }
 }
