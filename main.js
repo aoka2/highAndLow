@@ -99,35 +99,6 @@ function updateTotals(suit, value) {
         default:
             break;
     }
-    window.onload = () => {
-        // 画像のURL
-        const imageUrl = "https://deckofcardsapi.com/static/img/back.png";
-        
-        // 画像を取得
-        fetch(imageUrl)
-            .then(response => response.blob()) // 画像データをBlob形式で取得
-            .then(blob => {
-                // Blob URLを作成
-                const imageObjectURL = URL.createObjectURL(blob);
-    
-                // <img>タグを作成
-                const img = document.createElement("img");
-    
-                // imgタグのsrc属性にBlob URLを設定
-                img.src = imageObjectURL;
-    
-                // class="image-container" を持つ要素を取得
-                const container = document.querySelector(".image-container");
-    
-                // 取得した要素に画像を追加
-                if (container) {
-                    container.appendChild(img);
-                } else {
-                    console.error("画像を表示する要素が見つかりません。");
-                }
-            })
-            .catch(error => console.error('画像の取得中にエラーが発生しました:', error));
-    };
 }
 
 // 残りのカード枚数を更新
