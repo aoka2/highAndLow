@@ -9,10 +9,9 @@ const maxCardsToSelect = 3; // 最大選べる枚数
 const deckApiUrl = "https://deckofcardsapi.com/api/deck";
 
 // ゲーム開始時にデッキを取得
-window.onload = () => {
+function startGame() {
     initializeGame();
-    loadDefaultImage();
-};
+}
 
 // ゲームの初期化
 function initializeGame() {
@@ -20,6 +19,7 @@ function initializeGame() {
         .then(response => response.json())
         .then(data => {
             deckId = data.deck_id;
+            drawCards(); // ゲーム開始時に山札を引く
         })
         .catch(error => console.error('デッキの取得中にエラーが発生しました:', error));
 }
@@ -56,6 +56,11 @@ function loadDefaultImage() {
 
 // 山札からカードを引く
 function drawCards() {
+    if (!deckId) {
+        console.error('デッキが初期化されていません。');
+        return;
+    }
+
     fetch(`${deckApiUrl}/${deckId}/draw/?count=4`)
         .then(response => response.json())
         .then(data => {
@@ -70,7 +75,7 @@ function drawCards() {
                 cardImg.alt = `${card.value} of ${card.suit}`;
                 cardImg.dataset.value = card.value;
                 cardImg.dataset.suit = card.suit;
-                console.log (cardImg)
+
                 cardImg.onclick = () => selectCard(cardImg);
 
                 drawnCardsDiv.appendChild(cardImg);
@@ -79,7 +84,7 @@ function drawCards() {
         .catch(error => console.error('カードの取得中にエラーが発生しました:', error));
 }
 
-// カードを選択してリストに追加、場から削除
+// カードを選択してリストに追加、場から削除（選んだカードを移動させる)
 function selectCard(cardElement) {
     if (selectedCardsCount >= maxCardsToSelect) {
         alert("すでに3枚選択されています。");
@@ -100,9 +105,17 @@ function selectCard(cardElement) {
     updateRemainingCards(); // 残り枚数を更新
 
     if (selectedCardsCount === maxCardsToSelect) {
-        alert("3枚選択されました。次のターンへ進みます。");
-        // 次のターンの処理（例: 山札から再びカードを引く）
-        drawCards();
+        // 3枚選択されたら確認ダイアログを表示
+        const isConfirmed = confirm("3枚選択されました。これでよろしいですか？");
+        
+        if (isConfirmed) {
+            // OKが押された場合、次のターンへ進む
+            alert("次のターンへ進みます。");
+            drawCards();
+        } else {
+            // キャンセルが押された場合、カードの選択を維持する
+            alert("カード選択を維持しました。");
+        }
     }
 }
 
@@ -113,12 +126,33 @@ function getCardValue(value) {
     return parseInt(value);
 }
 
+// スートごとの合計を更新する
+function updateTotals(suit, value) {
+    const cardValue = getCardValue(value);
+
+    switch (suit) {
+        case 'HEARTS':
+            totalHearts += cardValue;
+            break;
+        case 'DIAMONDS':
+            totalDiamonds += cardValue;
+            break;
+        case 'CLUBS':
+            totalClubs += cardValue;
+            break;
+        case 'SPADES':
+            totalSpades += cardValue;
+            break;
+        default:
+            console.error("不明なスートです:", suit);
+    }
+}
 
 // 残りのカード枚数を更新
 function updateRemainingCards() {
-    const remainingCardsText = `あと${maxCardsToSelect - selectedCardsCount}枚選べます`;
-    const remainingCardsElement = document.getElementById('selected-cards-area');
-    
+    const remainingCardsText = `あと${maxCardsToSelect - selectedCardsCount}枚選択してください。`;
+    const remainingCardsElement = document.getElementById('remaining-cards');
+
     if (remainingCardsElement) {
         remainingCardsElement.textContent = remainingCardsText;
     } else {
