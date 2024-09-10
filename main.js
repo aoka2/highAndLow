@@ -11,6 +11,7 @@ const deckApiUrl = "https://deckofcardsapi.com/api/deck";
 // ゲーム開始時にデッキを取得
 function startGame() {
     initializeGame();
+    document.getElementById('draw-deck').disabled = true; // 初期化が完了するまで山札ボタンを無効化
 }
 
 // ゲームの初期化
@@ -19,39 +20,10 @@ function initializeGame() {
         .then(response => response.json())
         .then(data => {
             deckId = data.deck_id;
-            drawCards(); // ゲーム開始時に山札を引く
+            console.log('デッキID:', deckId);
+            document.getElementById('draw-deck').disabled = false; // デッキが初期化されたらボタンを有効化
         })
         .catch(error => console.error('デッキの取得中にエラーが発生しました:', error));
-}
-
-// 画像の読み込みと表示
-function loadDefaultImage() {
-    const imageUrl = "https://deckofcardsapi.com/static/img/back.png";
-
-    // 画像を取得
-    fetch(imageUrl)
-        .then(response => response.blob()) // 画像データをBlob形式で取得
-        .then(blob => {
-            // Blob URLを作成
-            const imageObjectURL = URL.createObjectURL(blob);
-
-            // <img>タグを作成
-            const img = document.createElement("img");
-
-            // imgタグのsrc属性にBlob URLを設定
-            img.src = imageObjectURL;
-
-            // class="image-container" を持つ要素を取得
-            const container = document.querySelector(".image-container");
-
-            // 取得した要素に画像を追加
-            if (container) {
-                container.appendChild(img);
-            } else {
-                console.error("画像を表示する要素が見つかりません。");
-            }
-        })
-        .catch(error => console.error('画像の取得中にエラーが発生しました:', error));
 }
 
 // 山札からカードを引く
@@ -104,18 +76,20 @@ function selectCard(cardElement) {
     selectedCardsCount++;
     updateRemainingCards(); // 残り枚数を更新
 
+    // 3枚選択されたら確認ダイアログを表示
     if (selectedCardsCount === maxCardsToSelect) {
-        // 3枚選択されたら確認ダイアログを表示
-        const isConfirmed = confirm("3枚選択されました。これでよろしいですか？");
-        
-        if (isConfirmed) {
-            // OKが押された場合、次のターンへ進む
-            alert("次のターンへ進みます。");
-            drawCards();
-        } else {
-            // キャンセルが押された場合、カードの選択を維持する
-            alert("カード選択を維持しました。");
-        }
+        setTimeout(() => { // 少し遅延を入れて選択状態を確認しやすくする
+            const isConfirmed = confirm("3枚選択されました。これでよろしいですか？");
+
+            if (isConfirmed) {
+                // OKが押された場合、次のターンへ進む
+                alert("次のターンへ進みます。");
+                drawCards();
+            } else {
+                // キャンセルが押された場合、カードの選択を維持する
+                alert("カード選択を維持しました。");
+            }
+        }, 100); // 100msの遅延を追加
     }
 }
 
@@ -159,3 +133,6 @@ function updateRemainingCards() {
         console.error("要素 'remaining-cards' が見つかりません。");
     }
 }
+
+// ゲーム開始時に startGame を実行
+window.onload = startGame;
