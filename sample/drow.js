@@ -21,6 +21,7 @@ async function drow(roomObject,deckID){
             card_img.src = card_img.src = imageUrl;
             card_img.dataset.value = card_meta["value"];
             card_img.dataset.suit = card_meta["suit"];
+            card_img.dataset.code = card_meta["code"];
             console.log(card_img);
 
             card_img.onclick = () => selectCard(card_img);

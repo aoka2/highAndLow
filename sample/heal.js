@@ -6,6 +6,15 @@ function heal(element){
         HP = 20;
     }
     document.getElementById('hp').textContent = HP;
+    
+    const log = document.getElementById("log");
+    const commnet = document.createElement("p");
+    commnet.style.borderWidth = "2px 0px 2px 0px";
+    commnet.style.borderStyle = "solid";
+    commnet.style.borderColor = "black";
+    commnet.textContent = `${element.dataset.value}ポイントの回復！`;
+
+    log.appendChild(commnet);
     console.log(`${element.dataset.value}ポイントの回復！`);
     cemetery(element);
 

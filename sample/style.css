@@ -1,0 +1,9 @@
+body{
+    display:flex;
+}
+.warpar{
+    flex:1;
+}
+.log{
+    flex:1;
+}
