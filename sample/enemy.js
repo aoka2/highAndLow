@@ -33,7 +33,7 @@ async function enemydamege(element){
             commentText = `${element.dataset.code}カードからの${damege}ポイントのダメージ！！`;
         }else{
             damege = 0;
-            commentText = 'ダメージを受けなかった！';
+            commentText = `${element.dataset.code}カードからのダメージを受けなかった！`;
         }
     }else{
         damege = enemyPoint;
@@ -41,6 +41,9 @@ async function enemydamege(element){
     }
     const log = document.getElementById("log");
     const commnet = document.createElement("p");
+    commnet.style.borderWidth = "0px 0px 2px 0px";
+    commnet.style.borderStyle = "solid";
+    commnet.style.borderColor = "black";
     commnet.textContent = commentText;
     console.log(commentText);
 
@@ -54,8 +57,11 @@ async function enemydamege(element){
     
     if(HP < 0){
         alert("負けてしまった・・・");
+        const tryflg = window.confirm('再挑戦しますか？');
+        if(tryflg){
+            window.location.reload();
+        }
         loseflg = true;
     }
-
     return loseflg;
 }

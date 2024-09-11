@@ -27,6 +27,7 @@ function proses(){
             case 'SPADES':
             case 'CLUBS':
                 loseflg = enemydamege(element);
+                console.log(loseflg);
                 if(loseflg){
                     return;
                 }
@@ -38,6 +39,7 @@ function proses(){
         console.log(removeelement);
         removeelement.remove();
     });
+    document.getElementById("dorw-button").disabled  = false;
     console.log("処理終了");
     
 }
