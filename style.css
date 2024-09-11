@@ -1,89 +1,60 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #1a1a1a;
+    color: white;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: 36px;
+}
+
+.status {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+.hp-bar, .score {
+    font-size: 24px;
+}
+
+.card-area {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    margin: 20px;
 }
 
-.container {
-    text-align: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #008CBA;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #005f73;
-}
-
-#dungeon-cards img, #selected-cards img {
+.card-area img {
     width: 80px;
     margin: 5px;
     cursor: pointer;
-    border: 2px solid #ccc;
-    border-radius: 5px;
     transition: transform 0.2s;
 }
 
-#dungeon-cards img:hover, #selected-cards img:hover {
+.card-area img:hover {
     transform: scale(1.1);
 }
 
-#weapon-slot img, #potion-slot img, #enemy-slot img {
-    width: 60px;
-    height: auto;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-}
-
-#weapon-slot, #potion-slot, #enemy-slot {
-    display: inline-block;
-    vertical-align: top;
-    margin: 10px;
-}
-
-#selected-cards {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.slot {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    display: inline-block;
-    vertical-align: top;
-}
-
-#graveyard {
-    margin-top: 30px;
-}
-
-#graveyard-cards {
+.slot-area {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#weapon-slot, #enemy-slot {
+    width: 200px;
+}
+
+#weapon-card, #enemy-cards {
+    display: flex;
     justify-content: center;
 }
 
-#graveyard-cards img {
-    width: 60px;
-    height: auto;
-    margin: 5px;
+.draw-button {
+    margin-top: 30px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
 }

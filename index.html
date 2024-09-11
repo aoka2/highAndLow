@@ -8,27 +8,28 @@
 </head>
 <body>
     <h1>悪党</h1>
-    <button type="button" onclick="nextTurn()">次のターンへ進む</button>
-    <div id="dungeon-cards">
+    <div class="status">
+        <div class="hp-bar">HP <span id="hp">20</span> / 20</div>
+        <div class="score">スコア: <span id="progress">0</span> / 10</div>
+    </div>
+    <div id="dungeon-cards" class="card-area">
         <!-- ダンジョンから引いたカードを表示 -->
     </div>
 
     <!-- スロットエリア -->
-    <div id="slots">
+    <div id="slots" class="slot-area">
         <div id="weapon-slot">
-            <h2>武器スロット</h2>
+            <h2>装備</h2>
             <div id="weapon-card"></div>
         </div>
-        <div id="potion-slot">
-            <h2>ポーションスロット</h2>
-            <div id="potion-card"></div>
-        </div>
         <div id="enemy-slot">
-            <h2>敵スロット</h2>
+            <h2>倒したモンスター</h2>
             <div id="enemy-cards"></div>
         </div>
     </div>
-    
+
+    <button id="draw-dungeon" class="draw-button">次のターンへ進む</button>
+
     <script src="main.js"></script>
 </body>
 </html>
