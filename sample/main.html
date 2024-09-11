@@ -13,10 +13,13 @@
                 HP:20
             </h4>
         </div>
-
+        <h4 style="display:inline;margin-right:5vw;width: 1vw;padding:0 2vw 0 0;" id="pile">残り山札：44</h4>
         <button onclick="test()" id="dorw-button" class="button-2">カードのドロー</button>
         <button onclick="proses();" class="button-2">カードの確定</button>
-        <div id="room"></div>
+        <div style="display: flex;">
+            <div style="flex: .2;"><img src="https://www.deckofcardsapi.com/static/img/back.png" style="width: 113px;height: 157px;"></div>
+            <div id="room" style="flex: 1;"></div>
+        </div>
         <h4>選ばれたカード</h4>
         <div id="selected-cards"></div>
         <h4>モンスター</h4>

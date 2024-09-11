@@ -1,6 +1,7 @@
 body{
     display: flex;
     text-align: center;
+    height: 100%;
 }
 .warpar{
     background-color: rgb(71, 117, 93);
@@ -12,16 +13,14 @@ body{
     overflow: scroll;
     flex-grow: 1 50%;
     height: 1em;
-}
-img{
-    size:20px;
+    width: 50%;
 }
 .comment{
     width: 50%;
 }
 div:empty{
     display: block;
-    margin-top: 157px;
+    margin-top: 165px;
 }
 p{
     margin: 0;
@@ -52,17 +51,22 @@ p{
 }
 
 .button-2:disabled{
-    background-color: #be3030;
+    background-color: #967e7e;
 }
 
 h4{
     white-space: nowrap;
+    background-color: #fff;
+    border: #be3030 solid 3px;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    margin-top:0.2vw;
+    margin-bottom: 0.5vw;
 }
 .card-title{
     flex-grow: 1;
 }
 #hp{
-    background: #fff;
     width: 10vw;
 }
 .hpStyle{

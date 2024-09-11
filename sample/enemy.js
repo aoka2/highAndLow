@@ -1,5 +1,6 @@
 async function enemydamege(element){
     let wepon = document.querySelector('#wepon-card').querySelectorAll('img');
+    let enemyElement = document.querySelector('#enemy-card');
     let weopnPoint = 0;
     let commentText;
     let loseflg = false;
@@ -39,6 +40,16 @@ async function enemydamege(element){
         damege = enemyPoint;
         commentText = `(素手ダメージ)${damege}ポイントのダメージ！！`;
     }
+    const work_element = element.cloneNode(true);
+    enemyElement.appendChild(work_element);
+    const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+    await sleep(1300);
+    work_element.animate({
+        opacity:["1","0"],
+    },{
+        fill:"forwards",
+        duration: 200
+    });
     comment(commentText);
     console.log(commentText);
     

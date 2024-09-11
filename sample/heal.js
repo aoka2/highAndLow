@@ -8,11 +8,23 @@ async function heal(element){
     document.getElementById('hp').textContent = "HP:" + HP;
     comment(`${element.dataset.value}ポイントの回復！`);
     console.log(`${element.dataset.value}ポイントの回復！`);
-
     const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
-    await sleep(3000);
-    cemetery(element);
+    //アニメーション
+    const work_element = element.cloneNode(true);
+    document.getElementById('posion-card').appendChild(work_element);
+    await sleep(1300);
+    work_element.animate({
+        opacity:["1","0"],
+    },{
+      fill:"forwards",
+      duration: 200
+    });
     posion.forEach(element => {
         element.remove();
     });
+}
+
+async function time(times){
+    const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+    await sleep(times);
 }

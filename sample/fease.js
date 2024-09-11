@@ -15,11 +15,10 @@ async function proses(){
             case 'HEARTS':
                 console.log(`回復回数${healNumber}`);
                 if(healNumber > 0){
-                    posion.forEach(element => {
-                        element.remove();
-                    });
+                    element.remove();
                 }else{
                     heal(element);
+                    document.getElementById('posion-card').querySelector('img').remove();
                     healNumber++;
                 }
                 break;
@@ -53,6 +52,11 @@ async function proses(){
 
     let eneyelement = document.querySelector('#enemy-card').querySelectorAll(`img`);
     eneyelement.forEach(removeelement => {
+        console.log(removeelement);
+        removeelement.remove();
+    });
+    let posionlement = document.querySelector('#posion-card').querySelectorAll(`img`);
+    posionlement.forEach(removeelement => {
         console.log(removeelement);
         removeelement.remove();
     });
