@@ -51,6 +51,7 @@ async function enemydamege(element){
     console.log(`現在のHP:${HP}`);
     document.getElementById('hp').textContent = HP;
     cemetery(element);
+    
     if(HP < 0){
         alert("負けてしまった・・・");
         loseflg = true;

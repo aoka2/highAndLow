@@ -29,9 +29,14 @@ function proses(){
                 loseflg = enemydamege(element);
                 if(loseflg){
                     return;
-                }       
+                }
                 break;
         }
+    });
+    let eneyelement = document.querySelector('#enemy-card').querySelectorAll(`img`);
+    eneyelement.forEach(removeelement => {
+        console.log(removeelement);
+        removeelement.remove();
     });
     console.log("処理終了");
     
