@@ -1,5 +1,5 @@
-function proses(){
-    let loseflg;
+async function proses(){
+    let loseflg = false;
     const selectcard = document.getElementById('selected-cards').querySelectorAll('img');
     console.log(selectcard);
     dispositing(selectcard);
@@ -9,7 +9,6 @@ function proses(){
 
     selectcard.forEach(element => { 
         const suit = element.dataset.suit;
-        console.log(suit);
         switch(suit){
             case 'DIAMONDS':
                 break;
@@ -26,14 +25,32 @@ function proses(){
                 break;
             case 'SPADES':
             case 'CLUBS':
+                if(HP < 1){
+                    console.log("敵処理中止");
+                    break;
+                }
                 loseflg = enemydamege(element);
                 console.log(loseflg);
-                if(loseflg){
-                    return;
-                }
                 break;
         }
     });
+    console.log(loseflg);
+    if(HP < 1){
+        comment("負けてしまった・・・");
+        alert("負けてしまった・・・");
+        const tryflg = window.confirm('再挑戦しますか？');
+        if(tryflg){
+            window.location.reload();
+        }else{
+
+        }
+    }else{
+
+    }
+
+    const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+    await sleep(3000);
+
     let eneyelement = document.querySelector('#enemy-card').querySelectorAll(`img`);
     eneyelement.forEach(removeelement => {
         console.log(removeelement);

@@ -8,26 +8,32 @@
     </head>
     <body>
     <div class="warpar">
-        <div>HP:<p id="hp">20</p></div>
-
-        <button onclick="test()" id="dorw-button">カードのドロー</button>
-        <button onclick="proses();">カードの確定</button>
-        <div id="room">
+        <div class="hpStyle">
+            <h4 id="hp">
+                HP:20
+            </h4>
         </div>
-        <p>選ばれたカード</p>
+
+        <button onclick="test()" id="dorw-button" class="button-2">カードのドロー</button>
+        <button onclick="proses();" class="button-2">カードの確定</button>
+        <div id="room"></div>
+        <h4>選ばれたカード</h4>
         <div id="selected-cards"></div>
-        <p>モンスター</p>
+        <h4>モンスター</h4>
         <div id="enemy-card"></div>
+            <div class="card-title"style="display:flex;">
+                <h4 style="width:33vw">武器</h4>
+                <h4 style="width:33vw">ポーション</h4>
+                <h4 style="width:33vw">墓地</h4>
+            </div>
         <div style="display:flex">
-            <p>武器</p>
             <div id="wepon-card" style="flex:1"></div>
-            <p>ポーション</p>
             <div id="posion-card" style="flex:1"></div>
-            <p>墓地</p>
             <div id="cemetery" style="flex:1"></div>
         </div>
     </div>
     <div id="log">
+        <h3 class="title"><ゲームログ></h3>
     </div>
     </body>
     <script src="home.js"></script>
@@ -39,4 +45,5 @@
     <script src="heal.js"></script>
     <script src="cemetery.js"></script>
     <script src="enemy.js"></script>
+    <script src="comment.js"></script>
 </html>

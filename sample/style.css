@@ -1,9 +1,70 @@
 body{
-    display:flex;
+    display: flex;
+    text-align: center;
 }
 .warpar{
-    flex:1;
+    background-color: rgb(71, 117, 93);
+    border: 3px solid saddlebrown;
+    flex-grow: 1 50%;
+    width: 50%;
 }
 .log{
-    flex:1;
+    overflow: scroll;
+    flex-grow: 1 50%;
+    height: 1em;
+}
+img{
+    size:20px;
+}
+.comment{
+    width: 50%;
+}
+div:empty{
+    display: block;
+    margin-top: 157px;
+}
+p{
+    margin: 0;
+}
+.title{
+    text-align: center;
+    border-bottom: 2px solid black;
+    width: 50vw;
+}
+
+.button-2 {
+    display: inline;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    margin:0 auto;
+    padding: .9em 2em;
+    border: none;
+    border-radius: 25px;
+    background-color: #ce4040;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.button-2:hover {
+    background-color: #be3030;
+}
+
+.button-2:disabled{
+    background-color: #be3030;
+}
+
+h4{
+    white-space: nowrap;
+}
+.card-title{
+    flex-grow: 1;
+}
+#hp{
+    background: #fff;
+    width: 10vw;
+}
+.hpStyle{
+    text-align: center;
 }

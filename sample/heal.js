@@ -1,39 +1,18 @@
-function heal(element){
+async function heal(element){
     let posion = document.querySelector('#posion-card').querySelectorAll('img');
     HP = HP + (element.dataset.value - 0);
     console.log(HP);
     if(HP > 20){
         HP = 20;
     }
-    document.getElementById('hp').textContent = HP;
-    
-    const log = document.getElementById("log");
-    const commnet = document.createElement("p");
-    commnet.style.borderWidth = "0px 0px 2px 0px";
-    commnet.style.borderStyle = "solid";
-    commnet.style.borderColor = "black";
-    commnet.textContent = `${element.dataset.value}ポイントの回復！`;
-
-    log.appendChild(commnet);
+    document.getElementById('hp').textContent = "HP:" + HP;
+    comment(`${element.dataset.value}ポイントの回復！`);
     console.log(`${element.dataset.value}ポイントの回復！`);
 
-    start();
-
+    const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+    await sleep(3000);
     cemetery(element);
-
     posion.forEach(element => {
         element.remove();
     });
 }
-
-async function start(){
-    await sleep(3000);
-}
-
-function sleep(msec) {
-    return new Promise(function(resolve) {
- 
-       setTimeout(function() {resolve()}, msec);
- 
-    })
- }

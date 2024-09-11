@@ -39,29 +39,16 @@ async function enemydamege(element){
         damege = enemyPoint;
         commentText = `(素手ダメージ)${damege}ポイントのダメージ！！`;
     }
-    const log = document.getElementById("log");
-    const commnet = document.createElement("p");
-    commnet.style.borderWidth = "0px 0px 2px 0px";
-    commnet.style.borderStyle = "solid";
-    commnet.style.borderColor = "black";
-    commnet.textContent = commentText;
+    comment(commentText);
     console.log(commentText);
-
-    await log.appendChild(commnet);
-    console.log(`ダメージ数:${damege}`);
-
+    
     HP = HP - damege;
     console.log(`現在のHP:${HP}`);
-    document.getElementById('hp').textContent = HP;
+    document.getElementById('hp').textContent = "HP:" + HP;
     cemetery(element);
-    
-    if(HP < 0){
-        alert("負けてしまった・・・");
-        const tryflg = window.confirm('再挑戦しますか？');
-        if(tryflg){
-            window.location.reload();
-        }
-        loseflg = true;
+    if(HP < 1){
+        console.log("負けフラグ設定");
+        return true;
     }
-    return loseflg;
+    return false;
 }

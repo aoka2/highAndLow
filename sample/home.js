@@ -3,6 +3,7 @@ let selectNum = 0;
 let deckID;
 let HP = 20;
 window.addEventListener('load', async () => {
+    const enemy = document.getElementById('enemy-card');
     deckID = await genarateDeck();
     console.log(deckID);
 });
