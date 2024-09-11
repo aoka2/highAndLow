@@ -7,14 +7,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div>
-        <h1>悪党</h1>
-        <button type="button" onclick="startGame()">ゲーム開始</button>
-        <!-- 山札の状態を表示する要素 -->
-        <div id="remaining-cards"></div>
-        <div id="drawn-cards"></div>
-        <div id="selected-cards"></div>
+    <h1>悪党</h1>
+    <button type="button" onclick="nextTurn()">次のターンへ進む</button>
+    <div id="dungeon-cards">
+        <!-- ダンジョンから引いたカードを表示 -->
     </div>
+
+    <!-- スロットエリア -->
+    <div id="slots">
+        <div id="weapon-slot">
+            <h2>武器スロット</h2>
+            <div id="weapon-card"></div>
+        </div>
+        <div id="potion-slot">
+            <h2>ポーションスロット</h2>
+            <div id="potion-card"></div>
+        </div>
+        <div id="enemy-slot">
+            <h2>敵スロット</h2>
+            <div id="enemy-cards"></div>
+        </div>
+    </div>
+    
     <script src="main.js"></script>
 </body>
 </html>

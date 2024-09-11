@@ -1,138 +1,145 @@
 let deckId;
-let totalHearts = 0;
-let totalDiamonds = 0;
-let totalClubs = 0;
-let totalSpades = 0;
-let selectedCardsCount = 0; // 選択されたカードの枚数
-const maxCardsToSelect = 3; // 最大選べる枚数
-
+let dungeonCards = [];
 const deckApiUrl = "https://deckofcardsapi.com/api/deck";
+let hp = 20;
+let weapon = null;
+let potion = null;
+let enemies = [];
 
-// ゲーム開始時にデッキを取得
-function startGame() {
-    initializeGame();
-    document.getElementById('draw-deck').disabled = true; // 初期化が完了するまで山札ボタンを無効化
-}
-
-// ゲームの初期化
 function initializeGame() {
     fetch(`${deckApiUrl}/new/shuffle/?deck_count=1`)
         .then(response => response.json())
         .then(data => {
             deckId = data.deck_id;
-            console.log('デッキID:', deckId);
-            document.getElementById('draw-deck').disabled = false; // デッキが初期化されたらボタンを有効化
+            updateHp();
+            drawDungeon();
         })
         .catch(error => console.error('デッキの取得中にエラーが発生しました:', error));
 }
 
-// 山札からカードを引く
-function drawCards() {
-    if (!deckId) {
-        console.error('デッキが初期化されていません。');
-        return;
-    }
-
+function drawDungeon() {
     fetch(`${deckApiUrl}/${deckId}/draw/?count=4`)
         .then(response => response.json())
         .then(data => {
-            const drawnCardsDiv = document.getElementById('drawn-cards');
-            drawnCardsDiv.innerHTML = ''; // 以前のカードをクリア
-            selectedCardsCount = 0; // カウントをリセット
-            updateRemainingCards(); // 残り枚数を表示
-
-            data.cards.forEach(card => {
-                const cardImg = document.createElement('img');
-                cardImg.src = card.image;
-                cardImg.alt = `${card.value} of ${card.suit}`;
-                cardImg.dataset.value = card.value;
-                cardImg.dataset.suit = card.suit;
-
-                cardImg.onclick = () => selectCard(cardImg);
-
-                drawnCardsDiv.appendChild(cardImg);
-            });
+            dungeonCards = data.cards;
+            displayDungeonCards();
+            updateRemainingCards();
         })
         .catch(error => console.error('カードの取得中にエラーが発生しました:', error));
 }
 
-// カードを選択してリストに追加、場から削除（選んだカードを移動させる)
-function selectCard(cardElement) {
-    if (selectedCardsCount >= maxCardsToSelect) {
-        alert("すでに3枚選択されています。");
-        return;
-    }
+function displayDungeonCards() {
+    const dungeonCardsDiv = document.getElementById('dungeon-cards');
+    dungeonCardsDiv.innerHTML = ''; // 前のカードをクリア
 
-    const selectedCardsDiv = document.getElementById('selected-cards');
-    const clonedCard = cardElement.cloneNode(true); // カードを選択リストに追加
-    selectedCardsDiv.appendChild(clonedCard);
+    dungeonCards.forEach((card, index) => {
+        const cardImg = document.createElement('img');
+        cardImg.src = card.image;
+        cardImg.alt = `${card.value} of ${card.suit}`;
+        cardImg.dataset.index = index;
 
-    // カードの値をスートごとに合計値に追加
-    updateTotals(cardElement.dataset.suit, cardElement.dataset.value);
+        cardImg.onclick = () => handleCardClick(card);
 
-    // 場から選択されたカードを削除
-    cardElement.remove();
+        dungeonCardsDiv.appendChild(cardImg);
+    });
+}
 
-    selectedCardsCount++;
-    updateRemainingCards(); // 残り枚数を更新
+function handleCardClick(card) {
+    const action = confirm("このカードを選びますか？\nOK: 選択, キャンセル: 選びなおす");
 
-    // 3枚選択されたら確認ダイアログを表示
-    if (selectedCardsCount === maxCardsToSelect) {
-        setTimeout(() => { // 少し遅延を入れて選択状態を確認しやすくする
-            const isConfirmed = confirm("3枚選択されました。これでよろしいですか？");
-
-            if (isConfirmed) {
-                // OKが押された場合、次のターンへ進む
-                alert("次のターンへ進みます。");
-                drawCards();
+    if (action) {
+        if (card.suit === 'DIAMONDS') {
+            if (!weapon || card.value > weapon.value) {
+                if (weapon) {
+                    moveCardToGraveyard(weapon);
+                }
+                weapon = card;
+                document.getElementById('weapon-slot').innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}">`;
             } else {
-                // キャンセルが押された場合、カードの選択を維持する
-                alert("カード選択を維持しました。");
+                moveCardToGraveyard(card);
             }
-        }, 100); // 100msの遅延を追加
-    }
-}
-
-// カードの値を数値に変換する
-function getCardValue(value) {
-    if (value === 'ACE') return 1;
-    if (value === 'JACK' || value === 'QUEEN' || value === 'KING') return 10;
-    return parseInt(value);
-}
-
-// スートごとの合計を更新する
-function updateTotals(suit, value) {
-    const cardValue = getCardValue(value);
-
-    switch (suit) {
-        case 'HEARTS':
-            totalHearts += cardValue;
-            break;
-        case 'DIAMONDS':
-            totalDiamonds += cardValue;
-            break;
-        case 'CLUBS':
-            totalClubs += cardValue;
-            break;
-        case 'SPADES':
-            totalSpades += cardValue;
-            break;
-        default:
-            console.error("不明なスートです:", suit);
-    }
-}
-
-// 残りのカード枚数を更新
-function updateRemainingCards() {
-    const remainingCardsText = `あと${maxCardsToSelect - selectedCardsCount}枚選択してください。`;
-    const remainingCardsElement = document.getElementById('remaining-cards');
-
-    if (remainingCardsElement) {
-        remainingCardsElement.textContent = remainingCardsText;
+        } else if (card.suit === 'HEARTS') {
+            if (!potion) {
+                potion = card;
+                document.getElementById('potion-slot').innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}">`;
+            } else {
+                moveCardToGraveyard(card);
+            }
+        } else {
+            if (enemies.length < 3) {
+                enemies.push(card);
+                const enemyCardsDiv = document.getElementById('enemy-slot');
+                const cardImg = document.createElement('img');
+                cardImg.src = card.image;
+                cardImg.alt = `${card.value} of ${card.suit}`;
+                enemyCardsDiv.appendChild(cardImg);
+            } else {
+                moveCardToGraveyard(card);
+            }
+        }
     } else {
-        console.error("要素 'remaining-cards' が見つかりません。");
+        moveCardToGraveyard(card);
+    }
+
+    dungeonCards = dungeonCards.filter(d => d.code !== card.code);
+    displayDungeonCards(); // 残りのカードを再表示
+    updateRemainingCards();
+}
+
+function moveCardToGraveyard(card) {
+    const graveyardCardsDiv = document.getElementById('graveyard-cards');
+    const cardImg = document.createElement('img');
+    cardImg.src = card.image;
+    cardImg.alt = `${card.value} of ${card.suit}`;
+    graveyardCardsDiv.appendChild(cardImg);
+}
+
+function updateRemainingCards() {
+    const remainingCards = document.getElementById('remaining-cards');
+    remainingCards.innerHTML = `残り枚数: ${dungeonCards.length}`;
+}
+
+function swapCards() {
+    drawDungeon(); // 入れ替えボタンを押すと新しい4枚を引く
+}
+
+function fight() {
+    if (weapon && enemies.length > 0) {
+        const strongestEnemy = enemies.reduce((max, enemy) => enemy.value > max.value ? enemy : max, enemies[0]);
+        if (weapon.value < strongestEnemy.value) {
+            hp -= (strongestEnemy.value - weapon.value);
+            if (hp < 0) hp = 0;
+        }
+        updateHp();
+        enemies = [];
+        document.getElementById('enemy-slot').innerHTML = ''; // 倒したモンスターのスロットをクリア
     }
 }
 
-// ゲーム開始時に startGame を実行
-window.onload = startGame;
+function equip() {
+    if (weapon) {
+        document.getElementById('weapon-slot').innerHTML = `<img src="${weapon.image}" alt="${weapon.value} of ${weapon.suit}">`;
+    }
+}
+
+function heal() {
+    if (potion) {
+        hp += potion.value;
+        if (hp > 20) hp = 20;
+        updateHp();
+        potion = null;
+        document.getElementById('potion-slot').innerHTML = ''; // 回復スロットをクリア
+    }
+}
+
+function updateHp() {
+    document.getElementById('hp').textContent = hp;
+}
+
+window.onload = function() {
+    initializeGame();
+    document.getElementById('draw-dungeon').onclick = drawDungeon;
+    document.getElementById('swap-cards').onclick = swapCards;
+    document.getElementById('equip').onclick = equip;
+    document.getElementById('heal').onclick = heal;
+};

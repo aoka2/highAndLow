@@ -31,7 +31,7 @@ button:hover {
     background-color: #005f73;
 }
 
-#drawn-cards img, #selected-cards img {
+#dungeon-cards img, #selected-cards img {
     width: 80px;
     margin: 5px;
     cursor: pointer;
@@ -40,27 +40,50 @@ button:hover {
     transition: transform 0.2s;
 }
 
-#drawn-cards img:hover, #selected-cards img:hover {
+#dungeon-cards img:hover, #selected-cards img:hover {
     transform: scale(1.1);
 }
 
-h2 {
-    font-size: 20px;
-    margin-top: 20px;
+#weapon-slot img, #potion-slot img, #enemy-slot img {
+    width: 60px;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 5px;
 }
 
-#totals-area {
+#weapon-slot, #potion-slot, #enemy-slot {
+    display: inline-block;
+    vertical-align: top;
+    margin: 10px;
+}
+
+#selected-cards {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.slot {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#graveyard {
     margin-top: 30px;
 }
 
-#remaining-cards {
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 20px;
-    color: #333;
+#graveyard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-#hearts-total, #diamonds-total, #clubs-total, #spades-total {
-    font-size: 18px;
-    margin: 5px 0;
+#graveyard-cards img {
+    width: 60px;
+    height: auto;
+    margin: 5px;
 }
