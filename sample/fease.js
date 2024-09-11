@@ -27,12 +27,19 @@ function proses(){
             case 'SPADES':
             case 'CLUBS':
                 loseflg = enemydamege(element);
+                console.log(loseflg);
                 if(loseflg){
                     return;
-                }       
+                }
                 break;
         }
     });
+    let eneyelement = document.querySelector('#enemy-card').querySelectorAll(`img`);
+    eneyelement.forEach(removeelement => {
+        console.log(removeelement);
+        removeelement.remove();
+    });
+    document.getElementById("dorw-button").disabled  = false;
     console.log("処理終了");
     
 }

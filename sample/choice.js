@@ -7,6 +7,7 @@ function selectCard(card,lengthNum){
     room[lengthNum] = null;
     card.remove();
     selectNum++;
+    document.getElementById("dorw-button").disabled  = true;
     }else{
         alert("すでに３枚選ばれました。");
     }
