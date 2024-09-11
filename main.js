@@ -1,138 +1,149 @@
 let deckId;
-let totalHearts = 0;
-let totalDiamonds = 0;
-let totalClubs = 0;
-let totalSpades = 0;
-let selectedCardsCount = 0; // 選択されたカードの枚数
-const maxCardsToSelect = 3; // 最大選べる枚数
-
+let dungeonCards = [];
+let usedCards = []; // 使用済みのカードを追跡
 const deckApiUrl = "https://deckofcardsapi.com/api/deck";
+let hp = 20;
+let weapon = null;
+let progress = 0;
 
-// ゲーム開始時にデッキを取得
-function startGame() {
-    initializeGame();
-    document.getElementById('draw-deck').disabled = true; // 初期化が完了するまで山札ボタンを無効化
-}
-
-// ゲームの初期化
 function initializeGame() {
     fetch(`${deckApiUrl}/new/shuffle/?deck_count=1`)
         .then(response => response.json())
         .then(data => {
             deckId = data.deck_id;
-            console.log('デッキID:', deckId);
-            document.getElementById('draw-deck').disabled = false; // デッキが初期化されたらボタンを有効化
+            updateHp();
+            updateProgress();
+            drawDungeon();
         })
         .catch(error => console.error('デッキの取得中にエラーが発生しました:', error));
 }
 
-// 山札からカードを引く
-function drawCards() {
-    if (!deckId) {
-        console.error('デッキが初期化されていません。');
-        return;
-    }
-
+function drawDungeon() {
     fetch(`${deckApiUrl}/${deckId}/draw/?count=4`)
         .then(response => response.json())
         .then(data => {
-            const drawnCardsDiv = document.getElementById('drawn-cards');
-            drawnCardsDiv.innerHTML = ''; // 以前のカードをクリア
-            selectedCardsCount = 0; // カウントをリセット
-            updateRemainingCards(); // 残り枚数を表示
-
-            data.cards.forEach(card => {
-                const cardImg = document.createElement('img');
-                cardImg.src = card.image;
-                cardImg.alt = `${card.value} of ${card.suit}`;
-                cardImg.dataset.value = card.value;
-                cardImg.dataset.suit = card.suit;
-
-                cardImg.onclick = () => selectCard(cardImg);
-
-                drawnCardsDiv.appendChild(cardImg);
-            });
+            dungeonCards = data.cards.filter(card => !usedCards.includes(card.code)); // 使用済みのカードを除外
+            displayDungeonCards();
         })
         .catch(error => console.error('カードの取得中にエラーが発生しました:', error));
 }
 
-// カードを選択してリストに追加、場から削除（選んだカードを移動させる)
-function selectCard(cardElement) {
-    if (selectedCardsCount >= maxCardsToSelect) {
-        alert("すでに3枚選択されています。");
-        return;
-    }
+function displayDungeonCards() {
+    const dungeonCardsDiv = document.getElementById('dungeon-cards');
+    dungeonCardsDiv.innerHTML = ''; // 前のカードをクリア
 
-    const selectedCardsDiv = document.getElementById('selected-cards');
-    const clonedCard = cardElement.cloneNode(true); // カードを選択リストに追加
-    selectedCardsDiv.appendChild(clonedCard);
+    dungeonCards.forEach((card, index) => {
+        const cardImg = document.createElement('img');
+        cardImg.src = card.image;
+        cardImg.alt = `${card.value} of ${card.suit}`;
+        cardImg.dataset.index = index;
 
-    // カードの値をスートごとに合計値に追加
-    updateTotals(cardElement.dataset.suit, cardElement.dataset.value);
+        cardImg.onclick = () => handleCardClick(card, index);
 
-    // 場から選択されたカードを削除
-    cardElement.remove();
+        dungeonCardsDiv.appendChild(cardImg);
+    });
+}
 
-    selectedCardsCount++;
-    updateRemainingCards(); // 残り枚数を更新
-
-    // 3枚選択されたら確認ダイアログを表示
-    if (selectedCardsCount === maxCardsToSelect) {
-        setTimeout(() => { // 少し遅延を入れて選択状態を確認しやすくする
-            const isConfirmed = confirm("3枚選択されました。これでよろしいですか？");
-
-            if (isConfirmed) {
-                // OKが押された場合、次のターンへ進む
-                alert("次のターンへ進みます。");
-                drawCards();
-            } else {
-                // キャンセルが押された場合、カードの選択を維持する
-                alert("カード選択を維持しました。");
-            }
-        }, 100); // 100msの遅延を追加
+function handleCardClick(card, index) {
+    if (card.suit === 'SPADES' || card.suit === 'CLUBS') {
+        if (confirm("この敵と戦いますか？")) {
+            fight(card, index);
+        }
+    } else if (card.suit === 'DIAMONDS') {
+        if (confirm("このカードを装備しますか？")) {
+            equip(card, index);
+        }
+    } else if (card.suit === 'HEARTS') {
+        if (confirm("このカードを使用してHPを回復しますか？")) {
+            heal(card, index);
+        }
     }
 }
 
-// カードの値を数値に変換する
-function getCardValue(value) {
-    if (value === 'ACE') return 1;
-    if (value === 'JACK' || value === 'QUEEN' || value === 'KING') return 10;
-    return parseInt(value);
-}
-
-// スートごとの合計を更新する
-function updateTotals(suit, value) {
-    const cardValue = getCardValue(value);
-
-    switch (suit) {
-        case 'HEARTS':
-            totalHearts += cardValue;
-            break;
-        case 'DIAMONDS':
-            totalDiamonds += cardValue;
-            break;
-        case 'CLUBS':
-            totalClubs += cardValue;
-            break;
-        case 'SPADES':
-            totalSpades += cardValue;
-            break;
-        default:
-            console.error("不明なスートです:", suit);
-    }
-}
-
-// 残りのカード枚数を更新
-function updateRemainingCards() {
-    const remainingCardsText = `あと${maxCardsToSelect - selectedCardsCount}枚選択してください。`;
-    const remainingCardsElement = document.getElementById('remaining-cards');
-
-    if (remainingCardsElement) {
-        remainingCardsElement.textContent = remainingCardsText;
+function fight(enemy, index) {
+    const enemyValue = cardValue(enemy);
+    if (weapon) {
+        const weaponValue = cardValue(weapon);
+        if (weaponValue >= enemyValue) {
+            document.getElementById('enemy-slot').innerHTML += `<img src="${enemy.image}" alt="${enemy.value} of ${enemy.suit}">`;
+        } else {
+            hp -= (enemyValue - weaponValue);
+            if (hp < 0) hp = 0;
+        }
     } else {
-        console.error("要素 'remaining-cards' が見つかりません。");
+        hp -= enemyValue;
+        if (hp < 0) hp = 0;
+    }
+    usedCards.push(enemy.code); // 使用済みカードに追加
+    dungeonCards.splice(index, 1); // 選ばれたカードを削除
+    updateHp();
+    checkTurnEnd();
+}
+
+function equip(card, index) {
+    if (weapon) {
+        moveCardToGraveyard(weapon);
+    }
+    weapon = card;
+    document.getElementById('weapon-slot').innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}">`;
+    usedCards.push(card.code); // 使用済みカードに追加
+    dungeonCards.splice(index, 1); // 選ばれたカードを削除
+    checkTurnEnd();
+}
+
+function heal(card, index) {
+    const healValue = cardValue(card);
+    hp += healValue;
+    if (hp > 20) hp = 20;
+    updateHp();
+    usedCards.push(card.code); // 使用済みカードに追加
+    dungeonCards.splice(index, 1); // 選ばれたカードを削除
+    checkTurnEnd();
+}
+
+function moveCardToGraveyard(card) {
+    const graveyardCardsDiv = document.getElementById('enemy-cards');
+    const cardImg = document.createElement('img');
+    cardImg.src = card.image;
+    cardImg.alt = `${card.value} of ${card.suit}`;
+    graveyardCardsDiv.appendChild(cardImg);
+}
+
+function updateHp() {
+    document.getElementById('hp').textContent = hp;
+    checkGameOver();
+}
+
+function updateProgress() {
+    document.getElementById('progress').textContent = `${progress}/10`;
+}
+
+function checkTurnEnd() {
+    if (dungeonCards.length === 0) {
+        progress++;
+        drawDungeon(); // 新しいターンを開始
     }
 }
 
-// ゲーム開始時に startGame を実行
-window.onload = startGame;
+function checkGameOver() {
+    if (hp <= 0) {
+        alert('ゲームオーバー！');
+        initializeGame();
+    } else if (progress >= 10) {
+        alert('ダンジョン攻略成功！');
+    }
+}
+
+function cardValue(card) {
+    switch(card.value) {
+        case 'ACE': return 1;
+        case 'JACK': return 11;
+        case 'QUEEN': return 12;
+        case 'KING': return 13;
+        default: return parseInt(card.value);
+    }
+}
+
+window.onload = function() {
+    initializeGame();
+};
