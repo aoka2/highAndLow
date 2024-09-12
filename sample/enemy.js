@@ -1,8 +1,8 @@
 async function enemydamege(element){
     let wepon = document.querySelector('#wepon-card').querySelectorAll('img');
+    let enemyElement = document.querySelector('#enemy-card');
     let weopnPoint = 0;
     let commentText;
-    let loseflg = false;
     if(wepon.length > 0){
         weopnPoint = wepon["0"].dataset.value;
     }
@@ -39,29 +39,23 @@ async function enemydamege(element){
         damege = enemyPoint;
         commentText = `(素手ダメージ)${damege}ポイントのダメージ！！`;
     }
-    const log = document.getElementById("log");
-    const commnet = document.createElement("p");
-    commnet.style.borderWidth = "0px 0px 2px 0px";
-    commnet.style.borderStyle = "solid";
-    commnet.style.borderColor = "black";
-    commnet.textContent = commentText;
+    const work_element = element.cloneNode(true);
+    enemyElement.appendChild(work_element);
+    const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+    await sleep(1300);
+    work_element.animate({
+        opacity:["1","0"],
+    },{
+        fill:"forwards",
+        duration: 200
+    });
+    comment(commentText);
     console.log(commentText);
-
-    await log.appendChild(commnet);
-    console.log(`ダメージ数:${damege}`);
-
+    
     HP = HP - damege;
     console.log(`現在のHP:${HP}`);
-    document.getElementById('hp').textContent = HP;
+    document.getElementById('hp').textContent = "HP:" + HP;
+    document.getElementById('hp').dataset.value = HP;
     cemetery(element);
-    
-    if(HP < 0){
-        alert("負けてしまった・・・");
-        const tryflg = window.confirm('再挑戦しますか？');
-        if(tryflg){
-            window.location.reload();
-        }
-        loseflg = true;
-    }
-    return loseflg;
+    return false;
 }

@@ -23,7 +23,7 @@ function dispositing(card){
             case 'SPADES':
             case 'CLUBS':
                 card_img = element.cloneNode(true);
-                document.getElementById('enemy-card').appendChild(card_img);
+                // document.getElementById('enemy-card').appendChild(card_img);
                 element.remove();
                 break;
         }
