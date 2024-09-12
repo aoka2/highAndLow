@@ -1,60 +1,62 @@
 body {
-    background-color: #1a1a1a;
-    color: white;
-    text-align: center;
     font-family: 'Arial', sans-serif;
+    background: #333;
+    color: #fff;
+    text-align: center;
 }
 
 h1 {
-    margin-top: 20px;
     font-size: 36px;
+    margin-top: 20px;
 }
 
-.status {
-    display: flex;
-    justify-content: space-around;
-    margin: 20px;
+#status, #dungeon, #slots {
+    margin: 20px auto;
 }
 
-.hp-bar, .score {
-    font-size: 24px;
+#status div {
+    margin: 10px 0;
 }
 
-.card-area {
-    display: flex;
-    justify-content: center;
-    margin: 20px;
-}
-
-.card-area img {
-    width: 80px;
-    margin: 5px;
+#dungeon-cards img {
+    width: 100px;
+    height: auto;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.3s ease;
 }
 
-.card-area img:hover {
+#dungeon-cards img:hover {
     transform: scale(1.1);
 }
 
-.slot-area {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-
-#weapon-slot, #enemy-slot {
-    width: 200px;
-}
-
-#weapon-card, #enemy-cards {
+#dungeon-cards.centered {
     display: flex;
     justify-content: center;
+    gap: 10px;
 }
 
-.draw-button {
-    margin-top: 30px;
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
+#weapon-slot, #graveyard {
+    margin-top: 20px;
+    display: inline-block;
+    vertical-align: top;
 }
+
+#weapon-slot img, #graveyard img {
+    width: 100px;
+    height: auto;
+    margin: 0 5px;
+}
+
+#graveyard {
+    height: 150px;
+    width: 400px;
+    border: 2px solid #555;
+    padding: 10px;
+    overflow-y: hidden; /* スクロールを隠す */
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+
+#graveyard img {
+    display: inline-block

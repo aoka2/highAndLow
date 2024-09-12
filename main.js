@@ -1,10 +1,14 @@
 let deckId;
 let dungeonCards = [];
-let usedCards = []; // 使用済みのカードを追跡
+let usedCards = [];
 const deckApiUrl = "https://deckofcardsapi.com/api/deck";
 let hp = 20;
 let weapon = null;
 let progress = 0;
+let totalCards = 52;
+let remainingCard = null;
+let actionsTaken = 0;
+let gameOver = false; // ゲームが終了したかどうかを管理する変数
 
 function initializeGame() {
     fetch(`${deckApiUrl}/new/shuffle/?deck_count=1`)
@@ -13,16 +17,26 @@ function initializeGame() {
             deckId = data.deck_id;
             updateHp();
             updateProgress();
+            updateRemainingCards();
             drawDungeon();
         })
         .catch(error => console.error('デッキの取得中にエラーが発生しました:', error));
 }
 
 function drawDungeon() {
-    fetch(`${deckApiUrl}/${deckId}/draw/?count=4`)
+    if (gameOver) return; // ゲーム終了時は新しいダンジョンを描画しない
+    const count = remainingCard ? 3 : 4;
+    fetch(`${deckApiUrl}/${deckId}/draw/?count=${count}`)
         .then(response => response.json())
         .then(data => {
-            dungeonCards = data.cards.filter(card => !usedCards.includes(card.code)); // 使用済みのカードを除外
+            if (remainingCard) {
+                dungeonCards = [remainingCard, ...data.cards];
+                remainingCard = null;
+            } else {
+                dungeonCards = data.cards;
+            }
+
+            dungeonCards = dungeonCards.filter(card => !usedCards.includes(card.code));
             displayDungeonCards();
         })
         .catch(error => console.error('カードの取得中にエラーが発生しました:', error));
@@ -30,32 +44,40 @@ function drawDungeon() {
 
 function displayDungeonCards() {
     const dungeonCardsDiv = document.getElementById('dungeon-cards');
-    dungeonCardsDiv.innerHTML = ''; // 前のカードをクリア
+    dungeonCardsDiv.innerHTML = '';
 
     dungeonCards.forEach((card, index) => {
         const cardImg = document.createElement('img');
         cardImg.src = card.image;
         cardImg.alt = `${card.value} of ${card.suit}`;
+        cardImg.dataset.code = card.code;
         cardImg.dataset.index = index;
 
         cardImg.onclick = () => handleCardClick(card, index);
 
         dungeonCardsDiv.appendChild(cardImg);
     });
+
+    setTimeout(() => {
+        dungeonCardsDiv.classList.add('centered');
+    }, 100);
 }
 
 function handleCardClick(card, index) {
-    if (card.suit === 'SPADES' || card.suit === 'CLUBS') {
-        if (confirm("この敵と戦いますか？")) {
-            fight(card, index);
-        }
-    } else if (card.suit === 'DIAMONDS') {
-        if (confirm("このカードを装備しますか？")) {
-            equip(card, index);
-        }
-    } else if (card.suit === 'HEARTS') {
-        if (confirm("このカードを使用してHPを回復しますか？")) {
-            heal(card, index);
+    if (gameOver) return; // ゲーム終了時はクリック操作を無効にする
+    if (dungeonCards.some(c => c.code === card.code)) {
+        if (card.suit === 'SPADES' || card.suit === 'CLUBS') {
+            if (confirm("この敵と戦いますか？")) {
+                fight(card, index);
+            }
+        } else if (card.suit === 'DIAMONDS') {
+            if (confirm("このカードを装備しますか？")) {
+                equip(card, index);
+            }
+        } else if (card.suit === 'HEARTS') {
+            if (confirm("このカードを使用してHPを回復しますか？")) {
+                heal(card, index);
+            }
         }
     }
 }
@@ -65,8 +87,10 @@ function fight(enemy, index) {
     if (weapon) {
         const weaponValue = cardValue(weapon);
         if (weaponValue >= enemyValue) {
-            document.getElementById('enemy-slot').innerHTML += `<img src="${enemy.image}" alt="${enemy.value} of ${enemy.suit}">`;
+            moveCardToGraveyard(enemy);
         } else {
+            moveCardToGraveyard(weapon);
+            weapon = null;
             hp -= (enemyValue - weaponValue);
             if (hp < 0) hp = 0;
         }
@@ -74,9 +98,11 @@ function fight(enemy, index) {
         hp -= enemyValue;
         if (hp < 0) hp = 0;
     }
-    usedCards.push(enemy.code); // 使用済みカードに追加
-    dungeonCards.splice(index, 1); // 選ばれたカードを削除
     updateHp();
+    checkGameOver(); // HPが減った後にゲームオーバーかどうかを確認
+    dungeonCards.splice(index, 1);
+    usedCards.push(enemy.code);
+    actionsTaken++;
     checkTurnEnd();
 }
 
@@ -86,8 +112,9 @@ function equip(card, index) {
     }
     weapon = card;
     document.getElementById('weapon-slot').innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}">`;
-    usedCards.push(card.code); // 使用済みカードに追加
-    dungeonCards.splice(index, 1); // 選ばれたカードを削除
+    dungeonCards.splice(index, 1);
+    usedCards.push(card.code);
+    actionsTaken++;
     checkTurnEnd();
 }
 
@@ -96,54 +123,70 @@ function heal(card, index) {
     hp += healValue;
     if (hp > 20) hp = 20;
     updateHp();
-    usedCards.push(card.code); // 使用済みカードに追加
-    dungeonCards.splice(index, 1); // 選ばれたカードを削除
+    moveCardToGraveyard(card);
+    dungeonCards.splice(index, 1);
+    usedCards.push(card.code);
+    actionsTaken++;
     checkTurnEnd();
 }
 
-function moveCardToGraveyard(card) {
-    const graveyardCardsDiv = document.getElementById('enemy-cards');
-    const cardImg = document.createElement('img');
-    cardImg.src = card.image;
-    cardImg.alt = `${card.value} of ${card.suit}`;
-    graveyardCardsDiv.appendChild(cardImg);
+function cardValue(card) {
+    const value = card.value;
+    if (['KING', 'QUEEN', 'JACK'].includes(value)) return 10;
+    if (value === 'ACE') return 11;
+    return parseInt(value, 10);
 }
 
 function updateHp() {
     document.getElementById('hp').textContent = hp;
-    checkGameOver();
 }
 
 function updateProgress() {
-    document.getElementById('progress').textContent = `${progress}/10`;
+    document.getElementById('progress').textContent = `ダンジョン進行: ${progress}/10`;
+}
+
+function updateRemainingCards() {
+    document.getElementById('remaining-count').textContent = totalCards - usedCards.length - dungeonCards.length;
+}
+
+function moveCardToGraveyard(card) {
+    const graveyardDiv = document.getElementById('graveyard');
+    const cardImg = document.createElement('img');
+    cardImg.src = card.image;
+    cardImg.alt = `${card.value} of ${card.suit}`;
+    graveyardDiv.appendChild(cardImg);
+
+    if (weapon && card.code === weapon.code) {
+        document.getElementById('weapon-slot').innerHTML = '';
+    }
 }
 
 function checkTurnEnd() {
-    if (dungeonCards.length === 0) {
+    if (actionsTaken >= 3) {
+        remainingCard = dungeonCards[0];
+        dungeonCards = [];
+        actionsTaken = 0;
         progress++;
-        drawDungeon(); // 新しいターンを開始
+        updateProgress();
+        if (progress <= 10) {
+            document.getElementById('game-message').textContent = `ダンジョンクリア！${progress}/10`;
+            drawDungeon();
+        } else {
+            document.getElementById('game-message').textContent = 'ゲーム終了！お疲れさまでした。';
+        }
+    } else {
+        displayDungeonCards();
     }
 }
 
+// HPが0になったときのゲーム終了処理
 function checkGameOver() {
     if (hp <= 0) {
-        alert('ゲームオーバー！');
-        initializeGame();
-    } else if (progress >= 10) {
-        alert('ダンジョン攻略成功！');
+        gameOver = true; // ゲーム終了フラグを立てる
+        document.getElementById('game-message').textContent = '攻略失敗！ゲームオーバー';
+        document.getElementById('dungeon-cards').innerHTML = ''; // ダンジョンのカードをすべて消す
     }
 }
 
-function cardValue(card) {
-    switch(card.value) {
-        case 'ACE': return 1;
-        case 'JACK': return 11;
-        case 'QUEEN': return 12;
-        case 'KING': return 13;
-        default: return parseInt(card.value);
-    }
-}
-
-window.onload = function() {
-    initializeGame();
-};
+// ゲーム開始
+initializeGame();
