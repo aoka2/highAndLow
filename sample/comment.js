@@ -8,5 +8,4 @@ function comment(text){
     commnets.textContent = text;
     log.appendChild(commnets);
     log.style.width = "50%";
-    
 }

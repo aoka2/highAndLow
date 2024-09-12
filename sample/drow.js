@@ -47,6 +47,7 @@ async function drow(roomObject,deckid){
     } catch (error) {
         document.getElementById("dorw-button").disabled  = false;
     }
+        healNumber = 0;
         return roomObject;
     }
 

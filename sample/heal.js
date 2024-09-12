@@ -6,6 +6,7 @@ async function heal(element){
         HP = 20;
     }
     document.getElementById('hp').textContent = "HP:" + HP;
+    document.getElementById('hp').dataset.value = HP;
     comment(`${element.dataset.value}ポイントの回復！`);
     console.log(`${element.dataset.value}ポイントの回復！`);
     const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));

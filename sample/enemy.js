@@ -3,7 +3,6 @@ async function enemydamege(element){
     let enemyElement = document.querySelector('#enemy-card');
     let weopnPoint = 0;
     let commentText;
-    let loseflg = false;
     if(wepon.length > 0){
         weopnPoint = wepon["0"].dataset.value;
     }
@@ -56,10 +55,7 @@ async function enemydamege(element){
     HP = HP - damege;
     console.log(`現在のHP:${HP}`);
     document.getElementById('hp').textContent = "HP:" + HP;
+    document.getElementById('hp').dataset.value = HP;
     cemetery(element);
-    if(HP < 1){
-        console.log("負けフラグ設定");
-        return true;
-    }
     return false;
 }
