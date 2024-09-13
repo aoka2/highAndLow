@@ -1,4 +1,4 @@
-body{
+.game{
     display: flex;
     text-align: center;
     height: 100%;
@@ -71,4 +71,15 @@ h4{
 }
 .hpStyle{
     text-align: center;
+}
+
+#rule{
+    display: block;
+    position: relative;
+    background: #fff;
+    user-select: none;
+}
+#roleText{
+    display: none;
+    user-select: none;
 }
