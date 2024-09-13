@@ -1,62 +1,74 @@
-body {
-    font-family: 'Arial', sans-serif;
-    background: #333;
+body{
+    display: flex;
+    text-align: center;
+    height: 100%;
+}
+.warpar{
+    background-color: rgb(71, 117, 93);
+    border: 3px solid saddlebrown;
+    flex-grow: 1 50%;
+    width: 50%;
+}
+.log{
+    overflow: scroll;
+    flex-grow: 1 50%;
+    height: 1em;
+    width: 50%;
+}
+.comment{
+    width: 50%;
+}
+div:empty{
+    display: block;
+    margin-top: 165px;
+}
+p{
+    margin: 0;
+}
+.title{
+    text-align: center;
+    border-bottom: 2px solid black;
+    width: 50vw;
+}
+
+.button-2 {
+    display: inline;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    margin:0 auto;
+    padding: .9em 2em;
+    border: none;
+    border-radius: 25px;
+    background-color: #ce4040;
     color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.button-2:hover {
+    background-color: #be3030;
+}
+
+.button-2:disabled{
+    background-color: #967e7e;
+}
+
+h4{
+    white-space: nowrap;
+    background-color: #fff;
+    border: #be3030 solid 3px;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    margin-top:0.2vw;
+    margin-bottom: 0.5vw;
+}
+.card-title{
+    flex-grow: 1;
+}
+#hp{
+    width: 10vw;
+}
+.hpStyle{
     text-align: center;
 }
-
-h1 {
-    font-size: 36px;
-    margin-top: 20px;
-}
-
-#status, #dungeon, #slots {
-    margin: 20px auto;
-}
-
-#status div {
-    margin: 10px 0;
-}
-
-#dungeon-cards img {
-    width: 100px;
-    height: auto;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-#dungeon-cards img:hover {
-    transform: scale(1.1);
-}
-
-#dungeon-cards.centered {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-#weapon-slot, #graveyard {
-    margin-top: 20px;
-    display: inline-block;
-    vertical-align: top;
-}
-
-#weapon-slot img, #graveyard img {
-    width: 100px;
-    height: auto;
-    margin: 0 5px;
-}
-
-#graveyard {
-    height: 150px;
-    width: 400px;
-    border: 2px solid #555;
-    padding: 10px;
-    overflow-y: hidden; /* スクロールを隠す */
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
-}
-
-#graveyard img {
-    display: inline-block
