@@ -1,0 +1,62 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #333;
+    color: #fff;
+    text-align: center;
+}
+
+h1 {
+    font-size: 36px;
+    margin-top: 20px;
+}
+
+#status, #dungeon, #slots {
+    margin: 20px auto;
+}
+
+#status div {
+    margin: 10px 0;
+}
+
+#dungeon-cards img {
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#dungeon-cards img:hover {
+    transform: scale(1.1);
+}
+
+#dungeon-cards.centered {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#weapon-slot, #graveyard {
+    margin-top: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#weapon-slot img, #graveyard img {
+    width: 100px;
+    height: auto;
+    margin: 0 5px;
+}
+
+#graveyard {
+    height: 150px;
+    width: 400px;
+    border: 2px solid #555;
+    padding: 10px;
+    overflow-y: hidden; /* スクロールを隠す */
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+
+#graveyard img {
+    display: inline-block

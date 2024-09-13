@@ -1,35 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>悪党</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <h1>悪党</h1>
-    <div id="status">
-        <div>HP: <span id="hp">20</span> / 20</div>
-        <div id="progress">ダンジョン進行: 0/10</div>
-        <div id="remaining-cards">あと<span id="remaining-count">52</span>枚</div>
-    </div>
-
-    <div id="dungeon">
-        <h2>ダンジョン</h2>
-        <div id="dungeon-cards" class="centered"></div>
-    </div>
-
-    <div id="slots">
-        <div id="weapon-slot">
-            <h2>装備</h2>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet"  href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+    <div class="warpar">
+        <div class="hpStyle">
+            <h4 id="hp" data-value="20">
+                HP:20
+            </h4>
         </div>
-        <div id="graveyard">
-            <h2>墓地</h2>
+        <h4 style="display:inline;margin-right:5vw;width: 1vw;padding:0 2vw 0 0;" id="pile">残り山札：44</h4>
+        <button onclick="test()" id="dorw-button" class="button-2">カードのドロー</button>
+        <button onclick="proses();" class="button-2">カードの確定</button>
+        <div style="display: flex;">
+            <div style="flex: .2;"><img src="https://www.deckofcardsapi.com/static/img/back.png" style="width: 113px;height: 157px;"></div>
+            <div id="room" style="flex: 1;"></div>
+        </div>
+        <h4>選ばれたカード</h4>
+        <div id="selected-cards"></div>
+        <h4>モンスター</h4>
+        <div id="enemy-card"></div>
+            <div class="card-title"style="display:flex;">
+                <h4 style="width:33vw">武器</h4>
+                <h4 style="width:33vw">ポーション</h4>
+                <h4 style="width:33vw">墓地</h4>
+            </div>
+        <div style="display:flex">
+            <div id="wepon-card" style="flex:1"></div>
+            <div id="posion-card" style="flex:1"></div>
+            <div id="cemetery" style="flex:1"></div>
         </div>
     </div>
-
-    <div id="game-message"></div>
-
-    <script src="main.js"></script>
-</body>
+    <div id="log">
+        <h3 class="title"><ゲームログ></h3>
+    </div>
+    </body>
+    <script src="home.js"></script>
+    <script src="deckGenarate.js"></script>
+    <script src="drow.js"></script>
+    <script src="choice.js"></script>
+    <script src="disposition.js"></script>
+    <script src="fease.js"></script>
+    <script src="heal.js"></script>
+    <script src="cemetery.js"></script>
+    <script src="enemy.js"></script>
+    <script src="comment.js"></script>
+    <script src="feaceloop.js"></script>
 </html>
