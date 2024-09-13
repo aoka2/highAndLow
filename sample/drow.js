@@ -37,6 +37,7 @@ async function drow(roomObject,deckid){
             card_img.dataset.value = card_meta["value"];
             card_img.dataset.suit = card_meta["suit"];
             card_img.dataset.code = card_meta["code"];
+            card_img.style.filter = `grayscale(100%)`;
 
             console.log(`ドローカード:${card_img}`);
             card_img.onclick = () => selectCard(card_img);
