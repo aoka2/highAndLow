@@ -1,10 +1,12 @@
 let rulePushNum = 0;
 function ruleDis(){
     if(rulePushNum % 2 == 0){
-        rulePushNum++;
+    rulePushNum++;
+    document.getElementById("ruleTitle").textContent = "ルール▲";
     document.getElementById("roleText").style.display = "block";
     }else{
-        rulePushNum++;
+    rulePushNum++;
+    document.getElementById("ruleTitle").textContent = "ルール▼";
     document.getElementById("roleText").style.display = "none";
     }
 }
